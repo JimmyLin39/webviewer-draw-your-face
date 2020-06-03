@@ -42,3 +42,18 @@ See [contributing](./CONTRIBUTING.md).
 
 See [license](./LICENSE).
 ![](https://onepixel.pdftron.com/webviewer-react-sample)
+
+## First Task
+To get you started with WebViewer we will have you build a webapp called draw-your-face, using a modern framework, that contains the following two pages. This task is expected to be completed in a day or two.
+
+### Login page
+- Not a real login page with authentication, just list of a few user names.
+- When clicking a list item, it navigates to the drawing page and you are now logged in as that user.
+
+### Drawing page
+- Default image (any image you find online) is loaded inside WebViewer.
+- Users can start drawing their face using a pen (other annotation tools should be disabled)
+- When user draws, there is a timestamp at bottom right corner that shows (and updates automatically) when the latest action was
+- The drawing and timestamp should be in the document itself so that users can download the document and store it in their device
+- After user has done drawing, he/she can save it using a save button
+- When user comes back, all their work should be persisted
