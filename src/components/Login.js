@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';
+import Drawing from './Drawing';
 
 const Login = () => {
   const [users, setUsers] = useState([
@@ -34,6 +35,7 @@ const Login = () => {
       <h1>Login</h1>
       {userList}
       <h2>current user: {currentUser.name}</h2>
+      <Drawing />
     </div>
   );
 };
