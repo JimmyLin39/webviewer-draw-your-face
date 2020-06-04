@@ -6,36 +6,32 @@ const Login = () => {
   const [users, setUsers] = useState([
     {
       id: '1',
-      name: 'Alice',
+      name: 'alice',
     },
     {
       id: '2',
-      name: 'Bob',
+      name: 'bob',
     },
     {
       id: '3',
-      name: 'Dan',
+      name: 'dan',
     },
   ]);
 
-  const [currentUser, setCurrentUser] = useState([]);
-
   const userList = users.map(user => (
-    <button
-      type="button"
-      className="user-button"
-      key={user.id}
-      onClick={() => setCurrentUser(user)}
-    >
-      {user.name}
-    </button>
+    <li key={user.id}>
+      <a href={`/${user.name}`}>{user.name}</a>
+    </li>
   ));
   return (
     <div className="login-container">
       <h1>Login</h1>
-      {userList}
-      <h2>current user: {currentUser.name}</h2>
-      <Drawing />
+      <div>
+        <nav>
+          <ul>{userList}</ul>
+        </nav>
+      </div>
+      {window.location.pathname !== '/' && <Drawing />}
     </div>
   );
 };
