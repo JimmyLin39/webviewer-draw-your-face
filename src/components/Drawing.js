@@ -1,7 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import WebViewer from '@pdftron/webviewer';
+import PropTypes from 'prop-types';
+import saveIcon from './floppy-disk.png';
 
-const Drawing = () => {
+const Drawing = ({ saveDoc }) => {
   const viewer = useRef(null);
   const currentUser = window.location.pathname.slice(1);
 
@@ -41,10 +43,37 @@ const Drawing = () => {
       {
         path: '/webviewer/lib',
         initialDoc: 'https://i.imgur.com/u2oPC.jpg',
+        showLocalFilePicker: true,
+        fullAPI: true,
       },
       viewer.current
     ).then(instance => {
+      // instance.loadDocument(
+      //   'blob:http://localhost:3000/60016a4f-2684-4668-b28e-2159683da53b',
+      //   { filename: 'myfile.pdf' }
+      // );
       const { Annotations, annotManager, docViewer } = instance;
+      // Add header button that will get file data on click
+      instance.setHeaderItems(header => {
+        header.push({
+          type: 'actionButton',
+          img: saveIcon,
+          title: 'save',
+          onClick: async () => {
+            const doc = docViewer.getDocument();
+            const xfdfString = await annotManager.exportAnnotations();
+            const data = await doc.getFileData({
+              // saves the document with annotations in it
+              xfdfString,
+            });
+            const arr = new Uint8Array(data);
+            const blob = new Blob([arr], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            saveDoc(currentUser, url);
+            // window.open(url);
+          },
+        });
+      });
       annotManager.setCurrentUser(currentUser);
       // disable all tools and only enable free hand tool
       instance.disableTools();
@@ -52,7 +81,7 @@ const Drawing = () => {
 
       annotManager.disableFreeTextEditing();
       annotManager.on('annotationChanged', (annotations, action, event) => {
-        // if (imported) return;
+        if (event.imported) return;
         // do event handling
         console.log('ANNOTATION CHANGED');
         if (annotations[0].ToolName === 'AnnotationCreateFreeHand') {
@@ -73,7 +102,7 @@ const Drawing = () => {
         }
       });
     });
-  }, [currentUser]);
+  }, [currentUser, saveDoc]);
 
   return (
     <>
@@ -84,3 +113,7 @@ const Drawing = () => {
 };
 
 export default Drawing;
+
+Drawing.propTypes = {
+  saveDoc: PropTypes.func.isRequired,
+};
