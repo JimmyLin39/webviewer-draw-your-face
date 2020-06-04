@@ -3,6 +3,7 @@ import WebViewer from '@pdftron/webviewer';
 
 const Drawing = () => {
   const viewer = useRef(null);
+  const currentUser = window.location.pathname.slice(1);
 
   const createTimestampAnnotation = Annotations => {
     // error to get page width
@@ -43,19 +44,28 @@ const Drawing = () => {
       },
       viewer.current
     ).then(instance => {
+      const { Annotations, annotManager, docViewer } = instance;
+      annotManager.setCurrentUser(currentUser);
       // disable all tools and only enable free hand tool
       instance.disableTools();
       instance.enableTools(['AnnotationCreateFreeHand']);
-
-      const { Annotations, annotManager, docViewer } = instance;
 
       annotManager.disableFreeTextEditing();
       annotManager.on('annotationChanged', (annotations, action, event) => {
         // if (imported) return;
         // do event handling
         console.log('ANNOTATION CHANGED');
-        console.log(annotations[0].ToolName);
         if (annotations[0].ToolName === 'AnnotationCreateFreeHand') {
+          // find previous timestamp annotation
+          const annots = annotManager.getAnnotationsList();
+          const timestampAnnotIndex = annots.findIndex(
+            annot => annot.ToolName === 'AnnotationCreateCallout'
+          );
+          // delete previous timestamp annotation
+          if (timestampAnnotIndex) {
+            annotManager.deleteAnnotation(annots[timestampAnnotIndex]);
+          }
+          // create new timestamp annotation
           const timestampAnnot = createTimestampAnnotation(Annotations);
           annotManager.addAnnotation(timestampAnnot);
           annotManager.redrawAnnotation(timestampAnnot);
@@ -63,9 +73,14 @@ const Drawing = () => {
         }
       });
     });
-  }, []);
+  }, [currentUser]);
 
-  return <div className="webviewer" ref={viewer}></div>;
+  return (
+    <>
+      <h2>current user: {currentUser}</h2>
+      <div className="webviewer" ref={viewer}></div>
+    </>
+  );
 };
 
 export default Drawing;
