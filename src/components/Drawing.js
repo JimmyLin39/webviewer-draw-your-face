@@ -78,7 +78,7 @@ const Drawing = ({ saveDoc }) => {
           }
           // create new timestamp annotation
           const timestampAnnot = createTimestampAnnotation(Annotations);
-          annotManager.addAnnotation(timestampAnnot);
+          annotManager.addAnnotation(timestampAnnot, true);
           annotManager.redrawAnnotation(timestampAnnot);
         }
       });
@@ -106,7 +106,6 @@ const Drawing = ({ saveDoc }) => {
       instance.disableTools();
       instance.enableTools(['AnnotationCreateFreeHand']);
 
-      annotManager.disableFreeTextEditing();
       handleAnnotChanged(Annotations, annotManager);
     });
   }, [currentUser, saveDoc]);
