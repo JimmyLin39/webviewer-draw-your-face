@@ -22,14 +22,12 @@ const Drawing = ({ saveDoc }) => {
       // annotManager.redrawAnnotation(freeText);
       const freeText = new Annotations.FreeTextAnnotation();
       freeText.PageNumber = 1;
-      console.log(freeText.getBottom());
 
       freeText.X = 400;
       freeText.Y = 350;
       freeText.Width = 200;
       freeText.Height = 20;
       freeText.setPadding(new Annotations.Rect(0, 0, 0, 0));
-      // content is the time stamp
       const date = new Date();
       // timestamp in YYYY-M-D hh:mm:ss format
       const timestamp = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
